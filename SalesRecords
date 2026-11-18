@@ -1,0 +1,98 @@
+import java.util.Scanner;
+
+// Interface - Q1.2
+interface IProducts {
+    int GetTotalProductsSold();
+    double GetAverageProductsSold();
+    String GetMostPopularProduct();
+}
+
+// Product class - Q1.2
+class Product implements IProducts {
+    private String[] products;
+    private int[][] sales;
+
+    public Product(String[] products, int[][] sales) {
+        this.products = products;
+        this.sales = sales;
+    }
+
+    @Override
+    public int GetTotalProductsSold() {
+        int total = 0;
+        for (int i = 0; i < sales.length; i++) {
+            for (int j = 0; j < sales[i].length; j++) {
+                total += sales[i][j];
+            }
+        }
+        return total;
+    }
+
+    @Override
+    public double GetAverageProductsSold() {
+        int total = GetTotalProductsSold();
+        int count = sales.length * sales[0].length; // 3 x 3 = 9
+        return (double) total / count;
+    }
+
+    @Override
+    public String GetMostPopularProduct() {
+        int highestTotal = -1;
+        String popular = "";
+        for (int i = 0; i < sales.length; i++) {
+            int productTotal = 0;
+            for (int j = 0; j < sales[i].length; j++) {
+                productTotal += sales[i][j];
+            }
+            if (productTotal > highestTotal) {
+                highestTotal = productTotal;
+                popular = products[i] + "(" + productTotal + ")";
+            }
+        }
+        return popular;
+    }
+}
+
+// Print class - Q1.3
+class PrintProduct {
+    public void PrintTotalSales(int total) {
+        System.out.println("TOTAL PRODUCT SALES: " + total);
+    }
+    public void PrintAverageSales(double average) {
+        System.out.println("AVERAGE PRODUCT SALES: " + (int) average);
+    }
+    public void PrintPopularProduct(String popular) {
+        System.out.println("MOST POPULAR PRODUCT: " + popular);
+    }
+}
+
+// Main class - Q1.1
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        String[] products = {
+            "Cozy Nights Monarch mattress",
+            "Restonic Barbados mattress",
+            "Sealy Phuket mattress"
+        };
+
+        int[][] sales = new int[3][3];
+
+        for (int i = 0; i < products.length; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print("Enter number of sales for month " + (j + 1) + " for " + products[i] + ": ");
+                sales[i][j] = input.nextInt();
+            }
+        }
+
+        Product productObj = new Product(products, sales);
+        PrintProduct printObj = new PrintProduct();
+
+        System.out.println("\nPRODUCT SALES REPORT - 2026");
+        System.out.println("----------------------------------------");
+        printObj.PrintTotalSales(productObj.GetTotalProductsSold());
+        printObj.PrintAverageSales(productObj.GetAverageProductsSold());
+        printObj.PrintPopularProduct(productObj.GetMostPopularProduct());
+    }
+}
